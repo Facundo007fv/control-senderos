@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ t['title'] }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 min-h-screen text-slate-100 font-sans selection:bg-emerald-500 selection:text-white flex flex-col justify-between">
+    <header class="bg-slate-900/70 backdrop-blur-xl border-b border-emerald-500/10 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-emerald-600 p-2.5 rounded-2xl shadow-md text-xl">🏔️</div>
+                <span class="font-black text-xl tracking-tight text-white">Trail<span class="text-emerald-400">Control</span></span>
+            </div>
+            <div class="flex items-center gap-3 flex-wrap">
+                <a href="/register-park" class="text-xs font-bold text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-500/30 px-4 py-2.5 rounded-xl transition shadow-sm">{{ t['btn_register_park'] }}</a>
+                <a href="/login" class="text-xs font-bold text-slate-200 bg-slate-800 hover:bg-slate-700 border border-slate-700 px-4 py-2.5 rounded-xl transition shadow-sm">{{ t['btn_admin'] }}</a>
+                <a href="/?lang={{ other_lang }}" class="text-xs font-bold text-emerald-300 bg-emerald-950/40 hover:bg-emerald-900/60 border border-emerald-500/20 px-4 py-2.5 rounded-xl transition">🌐 {{ t['lang_switch'] }}</a>
+            </div>
+        </div>
+    </header>
+    <main class="max-w-6xl mx-auto px-6 py-12 w-full">
+        <div class="mb-12 bg-gradient-to-r from-emerald-900/30 via-slate-900/50 to-slate-900/20 p-8 md:p-14 rounded-3xl border border-emerald-500/20 shadow-2xl backdrop-blur-md text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+                <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-bold px-3.5 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">{{ t['badge'] }}</span>
+                <h1 class="text-3xl md:text-5xl font-black mb-4 text-white tracking-tight">{{ t['title'] }}</h1>
+                <p class="text-base md:text-lg text-slate-300 max-w-2xl font-normal leading-relaxed">{{ t['subtitle'] }}</p>
+            </div>
+            <div class="flex flex-col gap-3 min-w-[220px]">
+                <a href="/register-park" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 px-6 rounded-2xl shadow-lg transition text-center text-sm flex items-center justify-center gap-2"><span>🎁</span> ¡7 Días Gratis!</a>
+                <a href="/login" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-3.5 px-6 rounded-2xl border border-slate-700 transition text-center text-sm">🛡️ Iniciar Sesión Admin</a>
+            </div>
+        </div>
+        <section class="bg-slate-900/60 border border-slate-800 p-8 md:p-12 rounded-3xl shadow-xl backdrop-blur-md mb-12">
+            <h2 class="text-2xl font-black text-white mb-8 flex items-center gap-3"><span class="bg-emerald-700 p-2.5 rounded-2xl text-base shadow-sm">📖</span> {{ t['instructions_title'] }}</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="bg-slate-950/80 p-6 md:p-8 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-emerald-500/20 text-emerald-400 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">B2B - Establecimientos ($34.000/mes)</span>
+                        <h3 class="text-xl font-black text-white mb-4">{{ t['admin_guide_title'] }}</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start gap-2.5"><span>✅</span> {{ t['admin_step1'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>✅</span> {{ t['admin_step2'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>✅</span> {{ t['admin_step3'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>✅</span> {{ t['admin_step4'] }}</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="bg-slate-950/80 p-6 md:p-8 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div>
+                        <span class="bg-blue-500/20 text-blue-400 font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider inline-block mb-3">B2C - Senderistas (Gratis)</span>
+                        <h3 class="text-xl font-black text-white mb-4">{{ t['runner_guide_title'] }}</h3>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start gap-2.5"><span>🥾</span> {{ t['runner_step1'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>🥾</span> {{ t['runner_step2'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>🥾</span> {{ t['runner_step3'] }}</li>
+                            <li class="flex items-start gap-2.5"><span>🥾</span> {{ t['runner_step4'] }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="bg-slate-950 border-t border-slate-900 py-8 px-6 mt-12 text-slate-400 text-xs">
+        <div class="max-w-6xl mx-auto space-y-3">
+            <div class="font-bold text-slate-300"><span>{{ t['disclaimer_title'] }}</span></div>
+            <p class="leading-relaxed text-slate-500 text-[11px]">{{ t['disclaimer_text'] }}</p>
+            <div class="pt-4 border-t border-slate-900 flex justify-between text-[11px] text-slate-600">
+                <p>© 2026 TrailControl. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

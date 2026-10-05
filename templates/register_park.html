@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Parque - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 min-h-screen flex items-center justify-center p-6 text-slate-100">
+    <div class="bg-slate-900/95 backdrop-blur-xl p-8 rounded-3xl shadow-2xl max-w-lg w-full border border-slate-800">
+        <div class="text-center mb-6">
+            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3.5 py-1 rounded-full uppercase tracking-wider border border-emerald-500/30 inline-block mb-2">SaaS B2B • 7 Días Gratis</span>
+            <h2 class="text-2xl font-black text-white tracking-tight">Registra tu Establecimiento</h2>
+            <p class="text-xs text-slate-400 mt-1">Completa los datos y haz clic en el mapa para fijar la ubicación.</p>
+        </div>
+        {% if error %}
+            <div class="bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs font-bold p-4 rounded-2xl mb-6 text-center leading-relaxed">{{ error }}</div>
+        {% endif %}
+        <form method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">Nombre del Parque</label>
+                <input type="text" name="park_name" required placeholder="Ej: Reserva Los Gigantes" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">Ubicación / Zona</label>
+                <input type="text" name="location" required placeholder="Ej: Punilla, Córdoba" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">CUIT del Establecimiento</label>
+                <input type="text" name="cuit" required placeholder="Ej: 30-71234567-8" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white font-mono">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-emerald-400 uppercase mb-1.5">📍 Haz clic en el mapa para marcar la ubicación:</label>
+                <div id="map" class="w-full h-48 rounded-2xl border border-slate-800 shadow-inner z-0"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Latitud</label>
+                    <input type="text" id="input_lat" name="latitude" required readonly value="-31.4201" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 font-mono">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Longitud</label>
+                    <input type="text" id="input_lng" name="longitude" required readonly value="-64.4988" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 font-mono">
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">Usuario Admin</label>
+                    <input type="text" name="username" required placeholder="admin_gigantes" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 uppercase mb-1.5">Contraseña</label>
+                    <input type="password" name="password" required placeholder="••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white">
+                </div>
+            </div>
+            <div class="bg-slate-950/60 p-4 rounded-2xl border border-slate-800 text-[11px] text-slate-400">
+                <input type="checkbox" name="terms" value="accepted" required class="accent-emerald-500 mr-2">
+                Acepto los <strong>Términos y Condiciones</strong> y el Descargo de Responsabilidad de seguridad.
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-3.5 rounded-xl transition shadow-lg text-sm">🚀 Iniciar 7 Días Gratis</button>
+        </form>
+        <div class="mt-6 text-center"><a href="/" class="text-xs font-bold text-slate-400 hover:text-white">← Volver al inicio</a></div>
+    </div>
+    <script>
+        let map = L.map('map').setView([-31.4201, -64.4988], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
+        let marker = L.marker([-31.4201, -64.4988], {draggable: true}).addTo(map);
+        marker.on('dragend', function(e) {
+            let pos = marker.getLatLng();
+            document.getElementById('input_lat').value = pos.lat.toFixed(6);
+            document.getElementById('input_lng').value = pos.lng.toFixed(6);
+        });
+        map.on('click', function(e) {
+            marker.setLatLng(e.latlng);
+            document.getElementById('input_lat').value = e.latlng.lat.toFixed(6);
+            document.getElementById('input_lng').value = e.latlng.lng.toFixed(6);
+        });
+    </script>
+</body>
+</html>

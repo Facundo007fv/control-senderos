@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 min-h-screen text-slate-100 flex items-center justify-center p-4">
+    <div class="bg-slate-900 p-6 sm:p-10 rounded-3xl max-w-md w-full border border-slate-800 shadow-2xl">
+        <div class="flex justify-between items-center mb-6">
+            <a href="/park/{{ park_id }}?lang={{ lang }}" class="text-xs font-bold text-emerald-400 bg-emerald-950 px-3.5 py-2 rounded-xl">← {{ t["back_trail"] }}</a>
+            <a href="/checkin/{{ trail_id }}?lang={{ other_lang }}" class="text-xs font-bold text-emerald-300 bg-emerald-950 px-3.5 py-2 rounded-xl">🌐 {{ t["lang_switch"] }}</a>
+        </div>
+        <div class="mb-6">
+            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3 py-1 rounded-full uppercase">{{ t["checkin_subtitle"] }}</span>
+            <h2 class="text-2xl font-black text-white mt-2">{{ t["checkin_title"] }}</h2>
+            <p class="text-xs text-slate-400 mt-1">{{ park_name }} • <span class="text-emerald-400 font-bold">{{ trail_name }}</span></p>
+        </div>
+        <form method="POST" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-300 mb-1.5">{{ t["name_label"] }}</label>
+                <input type="text" name="runner_name" required placeholder="Ej: Facundo Gómez" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-300 mb-1.5">{{ t["phone_label"] }}</label>
+                <input type="tel" name="runner_phone" required placeholder="Ej: 3541 555555" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white focus:ring-2 focus:ring-emerald-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold uppercase text-slate-300 mb-1.5">{{ t["companions_label"] }}</label>
+                <input type="number" name="companions" value="0" min="0" max="10" class="w-full bg-slate-950 border border-slate-800 rounded-2xl px-4 py-3 text-sm text-white font-bold">
+            </div>
+            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-4 rounded-2xl shadow-lg mt-2">🚀 {{ t["start_button"] }}</button>
+        </form>
+    </div>
+</body>
+</html>

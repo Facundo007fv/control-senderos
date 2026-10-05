@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><title>Grabar GPS - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body class="bg-slate-950 min-h-screen text-slate-100 p-6">
+    <div class="max-w-3xl mx-auto py-6">
+        <a href="/admin" class="text-xs font-bold text-emerald-400 hover:underline mb-6 inline-block">← Volver al panel</a>
+        <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-2xl">
+            <h1 class="text-2xl font-black text-white mb-4">🛰️ Grabador de Sendero GPS</h1>
+            <div id="map" class="w-full h-80 rounded-2xl border border-slate-800 mb-6"></div>
+            <div class="flex gap-3 mb-6">
+                <button id="btnStart" onclick="startTracking()" class="flex-1 bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3.5 rounded-xl">▶️ Iniciar</button>
+                <button id="btnStop" onclick="stopTracking()" disabled class="flex-1 bg-rose-600/40 text-white/40 font-bold py-3.5 rounded-xl cursor-not-allowed">⏹️️ Detener</button>
+            </div>
+            <form method="POST" id="saveForm" class="space-y-4 border-t border-slate-800 pt-6 hidden">
+                <input type="hidden" name="route_points" id="routePointsInput">
+                <div><label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nombre del Sendero</label><input type="text" name="trail_name" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white"></div>
+                <div><label class="block text-xs font-bold text-slate-300 uppercase mb-1">Dificultad</label><select name="difficulty" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-white"><option value="Fácil">Fácil</option><option value="Moderado">Moderado</option><option value="Difícil">Difícil</option></select></div>
+                <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-black py-3.5 rounded-xl">💾 Guardar Sendero</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        let map = L.map('map').setView([-31.4201, -64.4988], 14);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        let watchId = null, latLngs = [];
+        let polyline = L.polyline([], {color: '#10b981', weight: 4}).addTo(map);
+        function startTracking() {
+            latLngs = []; polyline.setLatLngs([]);
+            watchId = navigator.geolocation.watchPosition((pos) => {
+                let lat = pos.coords.latitude, lng = pos.coords.longitude;
+                latLngs.push([lat, lng]); polyline.setLatLngs(latLngs); map.setView([lat, lng], 16);
+            }, null, {enableHighAccuracy: true});
+            document.getElementById('btnStart').disabled = true;
+            document.getElementById('btnStop').disabled = false;
+        }
+        function stopTracking() {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            document.getElementById('routePointsInput').value = JSON.stringify(latLngs);
+            document.getElementById('saveForm').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

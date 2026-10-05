@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8"><title>SOS Enviado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-rose-950 to-slate-950 min-h-screen text-white flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-rose-500/40 p-6 rounded-3xl max-w-md w-full text-center shadow-2xl">
+        <div class="text-5xl mb-3 animate-bounce">🚨</div>
+        <h2 class="text-2xl font-black mb-2 text-rose-400">¡Alerta SOS Transmitida!</h2>
+        <p class="text-xs text-slate-300 mb-6">Los guardaparques han recibido tu pedido de auxilio junto con tu posición GPS exacta.</p>
+        <div class="bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs font-mono text-slate-400 mb-6">Lat: {{ lat }} | Lng: {{ lng }}</div>
+        <a href="https://maps.google.com/?q={{ lat }},{{ lng }}" target="_blank" class="block bg-blue-600 hover:bg-blue-500 text-white font-black py-3.5 rounded-2xl mb-3 text-xs shadow-lg">🗺️ Ver mi ubicación en Google Maps</a>
+        <a href="/timer/{{ reg_id }}" class="text-xs font-bold text-slate-400 underline">Volver al cronómetro</a>
+    </div>
+</body>
+</html>

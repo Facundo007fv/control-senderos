@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8"><title>Cronómetro - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        let s = 0;
+        setInterval(() => {
+            s++;
+            let h = Math.floor(s / 3600);
+            let m = Math.floor((s % 3600) / 60);
+            let sec = s % 60;
+            document.getElementById('timer').innerText = 
+                (h < 10 ? "0" + h : h) + ":" + (m < 10 ? "0" + m : m) + ":" + (sec < 10 ? "0" + sec : sec);
+        }, 1000);
+
+        function triggerSOS() {
+            if (!navigator.geolocation) {
+                window.location.href = "/sos-trigger/{{ reg_id }}?lat=0&lng=0";
+                return;
+            }
+            document.getElementById('sosBtn').innerText = "🚨 Obteniendo ubicación GPS...";
+            document.getElementById('sosBtn').disabled = true;
+            navigator.geolocation.getCurrentPosition(
+                (pos) => { window.location.href = `/sos-trigger/{{ reg_id }}?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}`; },
+                (err) => { window.location.href = "/sos-trigger/{{ reg_id }}?lat=0&lng=0"; },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 min-h-screen text-slate-100 flex items-center justify-center p-4">
+    <div class="bg-slate-900 p-6 sm:p-8 rounded-3xl max-w-md w-full text-center shadow-2xl border border-slate-800">
+        <span class="bg-emerald-500/20 text-emerald-300 text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block">🟢 Recorrido en Curso</span>
+        <h2 class="text-2xl font-black text-white">{{ r_name }}</h2>
+        <p class="text-xs text-slate-400 mb-6">{{ p_name }} • <span class="font-bold text-emerald-400">{{ t_name }}</span></p>
+        <div id="timer" class="bg-slate-950 text-emerald-400 font-mono text-5xl font-extrabold py-8 rounded-2xl mb-6 border border-slate-800 shadow-inner">00:00:00</div>
+        <a href="/checkout/{{ reg_id }}" class="block bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-4 rounded-2xl mb-3 text-sm shadow-lg">🏁 FINALIZAR (CHECK-OUT)</a>
+        <button id="sosBtn" onclick="triggerSOS()" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-black py-4 rounded-2xl shadow-lg text-sm">🚨 BOTÓN DE EMERGENCIA (SOS)</button>
+    </div>
+</body>
+</html>
