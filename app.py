@@ -17,7 +17,6 @@ def get_db_connection():
 def init_db():
   """Crea las tablas automáticamente si no existen al iniciar la app"""
   conn = get_db_connection()
-  # Tabla de administradores de parques / SaaS
   conn.execute("""
         CREATE TABLE IF NOT EXISTS parks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -28,7 +27,6 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
-  # Tabla para reportes SOS / feedback de los senderistas
   conn.execute("""
         CREATE TABLE IF NOT EXISTS reports (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +48,33 @@ def index():
   return render_template("index.html")
 
 
-# ─── SUPER ADMIN PANEL ───────────────────────────────────────────────
+# ─── REGISTRO DE PARQUES (Público / Directo) ──────────────────────────
+@app.route("/register-park", methods=["GET", "POST"])
+def register_park():
+  if request.method == "POST":
+    name = request.form.get("name")
+    code = request.form.get("code")
+    admin_user = request.form.get("admin_user")
+    admin_pass = request.form.get("admin_pass")
+
+    try:
+      conn = get_db_connection()
+      conn.execute(
+          "INSERT INTO parks (name, code, admin_user, admin_pass) VALUES (?, ?,"
+          " ?, ?)",
+          (name, code, admin_user, admin_pass),
+      )
+      conn.commit()
+      conn.close()
+      flash("¡Parque registrado exitosamente!", "success")
+      return redirect(url_for("index"))
+    except Exception as e:
+      flash(f"Error al registrar el parque (código repetido o inválido): {e}", "danger")
+
+  return render_template("register_park.html")
+
+
+# ─── SUPER ADMIN PANEL (facu_master / trail2026) ─────────────────────
 @app.route("/superadmin", methods=["GET", "POST"])
 def superadmin():
   if request.method == "POST":
@@ -95,7 +119,7 @@ def create_park():
     conn.close()
     flash("Parque creado exitosamente", "success")
   except Exception as e:
-    flash(f"Error al crear el parque (código repetido o inválido): {e}", "danger")
+    flash(f"Error al crear el parque: {e}", "danger")
 
   return redirect(url_for("superadmin_dashboard"))
 
