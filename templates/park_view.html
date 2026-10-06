@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ park_name }} - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-slate-950 via-slate-900 to-emerald-950 min-h-screen text-slate-100 p-4 sm:p-8 font-sans">
+    <div class="max-w-3xl mx-auto py-6">
+        <div class="flex justify-between items-center mb-6">
+            <a href="/?lang={{ lang }}" class="text-xs font-bold text-emerald-400 bg-emerald-950/60 border border-emerald-500/20 px-4 py-2.5 rounded-xl">← {{ t["back_home"] }}</a>
+            <a href="/park/{{ park_id }}?lang={{ other_lang }}" class="text-xs font-bold text-emerald-300 bg-emerald-950/40 border border-emerald-500/20 px-4 py-2.5 rounded-xl">🌐 {{ t["lang_switch"] }}</a>
+        </div>
+        <div class="bg-slate-900 p-6 sm:p-10 rounded-3xl border border-emerald-500/30 shadow-2xl mb-8">
+            <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-black px-3.5 py-1 rounded-full uppercase inline-block mb-3">Establecimiento Oficial</span>
+            <h1 class="text-3xl sm:text-4xl font-black text-white mb-2">{{ park_name }}</h1>
+            <p class="text-emerald-100 text-sm mb-4">📍 {{ park_location }}</p>
+            <div class="inline-flex items-center gap-2 bg-slate-950 border border-slate-800 px-4 py-2 rounded-xl text-xs font-mono text-emerald-300">
+                <span>⏰</span> {{ t["operating_hours"] }}: <strong>{{ open_time }} hs a {{ close_time }} hs</strong>
+            </div>
+        </div>
+        <h3 class="text-xl font-black mb-5 text-white">⛰️ {{ t["select_trail"] }}</h3>
+        <div class="grid grid-cols-1 gap-5">
+            {% for tr in trails %}
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="font-black text-white text-xl">🥾 {{ tr[1] }}</h4>
+                    {% if tr[3] %}
+                    <span class="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full">🟢 {{ t["status_open"] }}</span>
+                    {% else %}
+                    <span class="bg-rose-500/10 text-rose-400 text-xs font-bold px-3 py-1 rounded-full">🔴 {{ t["status_closed"] }}</span>
+                    {% endif %}
+                </div>
+                <p class="text-sm text-slate-400 mb-4">{{ t["difficulty"] }}: <span class="text-emerald-400 font-bold uppercase">{{ tr[2] }}</span></p>
+                
+                <div class="flex flex-col gap-2">
+                    {% if tr[3] %}
+                    <a href="/checkin/{{ tr[0] }}?lang={{ lang }}" class="w-full bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-black py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg"><span>⏱️</span> {{ t["btn_checkin"] }}</a>
+                    {% else %}
+                    <div class="w-full bg-slate-950 text-slate-500 font-bold text-sm py-4 rounded-2xl text-center border border-slate-800">🔒 {{ t["closed_weather"] }}</div>
+                    {% endif %}
+
+                    <!-- Botón agregado para ver la ruta y el mapa en vivo -->
+                    <a href="/trail-map/{{ tr[0] }}?lang={{ lang }}" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-2xl flex items-center justify-center gap-2 transition shadow-md text-sm">
+                        <span>🗺️</span> Ver Ruta y Mapa en Vivo
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
