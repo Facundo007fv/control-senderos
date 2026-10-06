@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa en Vivo - TrailControl</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body class="bg-slate-950 text-white min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-2xl bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow-2xl">
+        <h1 class="text-xl font-bold mb-2 text-blue-400">Seguimiento: {{ trail.name }}</h1>
+        <p class="text-xs text-slate-400 mb-4">Sigue la línea del sendero y tu posición actual por GPS en tiempo real.</p>
+
+        <!-- Contenedor del Mapa -->
+        <div id="map" class="w-full h-96 rounded-2xl shadow-inner z-10"></div>
+
+        <div class="mt-4 flex justify-between items-center">
+            <a href="javascript:history.back()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-semibold rounded-xl transition">Volver</a>
+            <span id="gps-status" class="text-xs text-yellow-400">Buscando señal GPS...</span>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-31.42, -64.49], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Cargar las coordenadas del sendero guardadas por el admin
+        try {
+            var rawCoordinates = '{{ trail.route_points | safe }}';
+            if (rawCoordinates && rawCoordinates !== "None") {
+                var routePoints = JSON.parse(rawCoordinates);
+                if (routePoints && routePoints.length > 0) {
+                    var polyline = L.polyline(routePoints, {color: '#3b82f6', weight: 5}).addTo(map);
+                    map.fitBounds(polyline.getBounds());
+                }
+            }
+        } catch (e) {
+            console.log("Error al cargar puntos de ruta: ", e);
+        }
+
+        // Seguimiento GPS en tiempo real del corredor
+        if (navigator.geolocation) {
+            var userMarker = null;
+            var statusText = document.getElementById('gps-status');
+
+            navigator.geolocation.watchPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+
+                statusText.innerText = "GPS Activo 🟢";
+                statusText.className = "text-xs text-green-400 font-semibold";
+
+                if (userMarker) {
+                    userMarker.setLatLng([lat, lng]);
+                } else {
+                    userMarker = L.marker([lat, lng]).addTo(map)
+                        .bindPopup("¡Estás aquí!").openPopup();
+                }
+            }, function(error) {
+                statusText.innerText = "Error de GPS: " + error.message;
+                statusText.className = "text-xs text-red-400";
+            }, {
+                enableHighAccuracy: true
+            });
+        } else {
+            document.getElementById('gps-status').innerText = "Geolocalización no soportada.";
+        }
+    </script>
+</body>
+</html>
